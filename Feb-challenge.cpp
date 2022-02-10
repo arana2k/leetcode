@@ -211,3 +211,87 @@ char findTheDifference(string s, string t) {
         return c;
     }
 };
+
+// DAY 8(532. K-diff Pairs in an Array)=============================================================================================
+
+//we have to find all pairs the array which have an absolute difference of 'k' and then eliminate those which are not unique.
+
+
+//Using maps
+
+class Solution {
+public:
+    int findPairs(vector<int>& nums, int k) {
+        unordered_map<int,int> a;
+        for(int i:nums)
+            a[i]++;
+        int ans=0;
+        for(auto x:a)
+        {
+            if(k==0)
+            {    
+                if(x.second>1)
+                ans++;
+            }
+             else if(a.find(x.first+k)!=a.end())
+                ans++;
+        }
+        
+        return ans;
+    }
+};
+
+//using two pointer
+
+class Solution {
+public:
+    int findPairs(vector<int>& nums, int k) {
+        sort(nums.begin(),nums.end());
+        int ans=0,i=0,j=1;
+        for(i,j;i<nums.size() and j<nums.size();)
+        {
+            if(i==j or nums[j]-nums[i]<k)
+                j++;
+            else 
+            {
+                if(nums[j]-nums[i]==k)
+                {
+                    ans++;
+                    j++;
+                    for(;j<nums.size();j++)
+                        if(nums[j]!=nums[j-1])
+                            break;
+                    if(j==nums.size())
+                    return ans;
+                    j--;                  
+                }
+                i++;
+                while(i<j and nums[i]==nums[i-1])
+                    i++;
+            }
+        }
+        return ans;
+    }
+};
+
+// DAY 9(560. Subarray Sum Equals K)=============================================================================================
+
+/*
+we keep an accumulator variable sum with the running total of the sum of numbers; we then check if we have already met that values using our seen hashmap that acts more or less like a frequency table, storing how many times we have encountered a specific value: sum - k.
+That is why if have met sum - k before and now the value is sum, the difference between those specific points and the current iteration is, by definiton, exactly k: we are now at sum, so, the interval between the previous point(s) and now sums up to, by definition, sum - (sum - k), which equates k.
+We collect all those occurrences in count and finally we return it.
+*/
+
+class Solution {
+public:
+    int subarraySum(vector<int>& nums, int k) {
+        std::unordered_map<int, int> seen = {{0, 1}};
+        int count = 0, sum = 0;
+        for (auto n: nums) {
+            sum += n;
+            count += seen[sum - k];
+            seen[sum]++;
+        }
+        return count;
+    }
+};
