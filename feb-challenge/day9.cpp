@@ -1,4 +1,4 @@
-// DAY 8(532. K-diff Pairs in an Array)=============================================================================================
+// DAY 9(532. K-diff Pairs in an Array)=============================================================================================
 
 //we have to find all pairs the array which have an absolute difference of 'k' and then eliminate those which are not unique.
 
