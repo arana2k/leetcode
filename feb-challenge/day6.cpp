@@ -1,4 +1,4 @@
-// DAY 6 (80. Remove Duplicates from Sorted Array II)===========================================================================
+// DAY 6 (80. Remove Duplicates from Sorted Array II)==========================================================================
 
 int removeDuplicates(vector<int> &nums)
 {
