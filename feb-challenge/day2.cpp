@@ -1,4 +1,4 @@
-// DAY 2 (438. Find All Anagrams in a String)======================================================================
+// DAY 2 (438. Find All Anagrams in a String)=====================================================================
 
 vector<int> findAnagrams(string s, string p)
 {
