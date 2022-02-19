@@ -662,21 +662,103 @@ public:
 
 // DAY 18(402. Remove K Digits)=============================================================================================
 
-string removeKdigits(string num, int k) {
-       string ans = "";                                         // treat ans as a stack in below for loop
-       
-       for (char c : num) {
-           while (ans.length() && ans.back() > c && k) {
-               ans.pop_back();                                  // make sure digits in ans are in ascending order
-               k--;                                             // remove one char
-           }
-           
-           if (ans.length() || c != '0') { ans.push_back(c); }  // can't have leading '0'
-       }
-       
-       while (ans.length() && k--) { ans.pop_back(); }          // make sure remove k digits in total
-       
-       return ans.empty() ? "0" : ans;
-}
+class Solution {
+public:
+    string removeKdigits(string num, int k) {
+        // number of operation greater than length we return an empty string
+        if(num.length() <= k)   
+            return "0";
+        
+        // k is 0 , no need of removing /  preforming any operation
+        if(k == 0)
+            return num;
+        
+        string res = "";// result string
+        stack <char> s; // char stack
+        
+        s.push(num[0]); // pushing first character into stack
+        
+        for(int i = 1; i<num.length(); ++i)
+        {
+            while(k > 0 && !s.empty() && num[i] < s.top())
+            {
+                // if k greater than 0 and our stack is not empty and the upcoming digit,
+                // is less than the current top than we will pop the stack top
+                --k;
+                s.pop();
+            }
+            
+            s.push(num[i]);
+            
+            // popping preceding zeroes
+            if(s.size() == 1 && num[i] == '0')
+                s.pop();
+        }
+        
+        while(k && !s.empty())
+        {
+            // for cases like "456" where every num[i] > num.top()
+            --k;
+            s.pop();
+        }
+        
+        while(!s.empty())
+        {
+            res.push_back(s.top()); // pushing stack top to string
+            s.pop(); // pop the top element
+        }
+        
+        reverse(res.begin(),res.end()); // reverse the string 
+        
+        if(res.length() == 0)
+            return "0";
+        
+        return res;
+        
+        
+    }
+};
+	
+	
+// DAY 19(1675. Minimize Deviation in Array)=============================================================================================	
+
+class Solution {
+public:
+    int minimumDeviation(vector<int>& nums) {
+        set <int>  s;
+        
+        // Storing all  elements  in sorted order
+        //insert even directly and odd with one time multiplication
+        //and it will become even
+        for(int i = 0; i<nums.size() ; ++i)
+        {
+            if(nums[i] % 2 == 0)
+                s.insert(nums[i]);
+            
+            else
+                // Odd number are transformed
+                // using 2nd operation
+                s.insert(nums[i] * 2);
+        }
+        
+        // maximum - minimun
+        int diff = *s.rbegin() - *s.begin();
+        
+        //run the loop untill difference is minimized
+        while(*s.rbegin() % 2 == 0)
+        {
+            
+            // Maximum element of the set
+            int x = *s.rbegin();
+            s.erase(x);
+            // remove begin element and inserted half of it for minimizing
+            s.insert(x/2);
+            
+            diff = min(diff, *s.rbegin() - *s.begin());
+        }
+        return diff;
+    }
+};
+
 
 
