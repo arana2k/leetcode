@@ -874,7 +874,7 @@ public:
 };
 
 
-// DAY 22(133. Clone Graph)=============================================================================================
+// DAY 23(133. Clone Graph)=============================================================================================
 
 
 
@@ -924,5 +924,186 @@ public:
     }
     
 };
+
+
+// DAY 24(148. Sort List)=============================================================================================
+
+
+class Solution {
+public:
+    // function that divides linked list into half parts, and after sorting use to merge them
+    void mergesorting(ListNode** head) 
+    {
+        ListNode* curr = *head; // make a current pointer 
+        ListNode* first; // for the first half
+        ListNode* second; // for the second half
+        
+        // if linked list is null or just having a single elemrnt then simple return. because we don't have to do anything
+        if(curr == NULL || curr -> next == NULL)
+            return;
+        
+        findmid(curr, &first,&second); // function used to find mid in b/w the
+        
+        //again call merrge sorting for first half, so it again divides first half into two and for that again....till when only one element is left
+        mergesorting(&first); 
+        
+        //again call merrge sorting for second half, so it again divides second half into two and for that again....till when only one element is left
+        mergesorting(&second);
+        
+        *head = merge(first,second); // and at last merge oyr first half and second half
+    }
+    
+    // function to find mid, we use hare and tortise meethod to find mid
+    void findmid(ListNode* curr, ListNode** first, ListNode** second)
+    {
+        ListNode* slow = curr; // make a slow pointer
+        ListNode* fast = curr -> next; // make a fast pointer
+        
+        // then we move our fast upto it not become null, means not reach on last position
+        while(fast != NULL)
+        {
+            fast = fast -> next;
+            if(fast != NULL)
+            {
+                fast = fast -> next;
+                slow = slow -> next;
+            }
+        }
+        
+        // after this assign curr to first
+        *first = curr;
+        *second = slow -> next; // second to slow next
+        slow -> next = NULL; // and put slow next to null
+    }
+    
+    // function used to merge first and second pointer
+    ListNode* merge(ListNode* first, ListNode* second)
+    {
+        ListNode* answer = NULL; // define answer to null
+        
+        if(first == NULL) // if first is null, then what to merge...nothing
+        {
+            return second; // return second
+        }
+        
+        if(second == NULL) // if second is null, then what to merge...nothing
+        {
+            return first; // return first
+        }
+        
+        // if value of first is less than value of second,then give answer to first
+        if(first -> val <= second -> val) 
+        {
+            answer = first;
+            answer -> next = merge(first -> next, second); // and again call merge for answer's next
+        }
+        else // else give answer to second
+        {
+            answer = second;
+            answer -> next = merge(first, second -> next); // and again call merge for answer's next
+        }
+        
+        return answer; // finally return answer
+    }
+    ListNode* sortList(ListNode* head) {
+        // paasing pointer as reference, so that changes are reflected
+        mergesorting(&head); 
+        
+        return head;
+    }
+};
+
+
+// DAY 25(148. Sort List)=============================================================================================
+
+
+class Solution {
+public:
+    int compareVersion(string s1, string s2) {
+        int n1 = s1.length(); // extracting length of string s1
+        int n2 = s2.length(); //extracting length of string s2
+        
+        int i = 0, j = 0; // variables(pointers) used for moving
+        
+        int number1 = 0, number2 = 0;  // numbers that generated between any two dots of the strings
+        
+        // start traversing from string 1 and string 2
+        while(i < n1 || j < n2)
+        {
+            // generating number between dots for string s1
+            while(i < n1 && s1[i] != '.')
+            {
+                number1 = number1 * 10 + (s1[i] - '0');
+                i++;
+            }
+            
+            // generating number between dots for string s2
+            while(j < n2 && s2[j] != '.')
+            {
+                number2 = number2 * 10 + (s2[j] - '0');
+                j++;
+            }
+            
+            // if number1 is greater than number2, from here return 1
+            if(number1 > number2)
+            {
+                return 1;
+            }
+            
+             // if number1 is less than number2, from here return -1
+            if(number1 < number2)
+            {
+                return -1;
+            }
+            
+            // if equal then we have to proceed further
+            // again give numbers to zero, as we again generate numbers b/w dots 
+            number1 = 0, number2 = 0;
+            
+            // move both pointers
+            i++;
+            j++;
+        }
+        
+        // after traversing whole string, if all the versions are equal, that means
+        // strings are equal, so return 0
+        return 0;
+    }
+};
+
+
+// DAY 26(847. Shortest Path Visiting All Nodes)=============================================================================================
+
+
+class Solution {
+public:
+  int shortestPathLength(vector<vector<int>>& graph) {
+    int n = graph.size(),res = 0;
+    queue<tuple<int,int,int>> q;
+    vector<vector<int>> seen(n,vector<int>(1<<n));
+    for(int i=0;i<n;i++){
+        q.push(tuple<int,int,int>(i,1<<i,0));
+        seen[i][1<<i] = true;
+    }
+    while (!q.empty())
+    {
+        auto [idx,mask,dist] = q.front();
+        q.pop();
+        if(mask==(1<<n)-1){
+            res = dist;
+            break;
+        }
+        for(auto v:graph[idx]){
+            int mask_v = mask|1<<v;
+            if(!seen[v][mask_v]){
+                q.push(tuple<int,int,int>(v,mask_v,dist+1));
+                seen[v][mask_v] = true;
+            }
+        }
+    }
+    return res;
+}
+};
+
 
 
